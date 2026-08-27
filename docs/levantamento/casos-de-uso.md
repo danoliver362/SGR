@@ -56,3 +56,36 @@ O serviço não pode ser realizado sem definição prévia do orçamento.
 2. O atendente informa que o valor ainda está sendo verificado.
 3. O atendimento permanece pendente.
 4. Quando o valor estiver disponível, o cliente é contatado novamente.
+
+## UC-003 — Serviço aguardando peça
+
+### Objetivo
+
+Registrar e acompanhar um serviço que depende da disponibilidade de uma peça para ser realizado.
+
+### Ator principal
+
+Atendente
+
+### Pré-condições
+
+- O relógio foi recebido para serviço.
+- A avaliação identificou a necessidade de uma peça.
+
+### Fluxo principal
+
+1. O atendente registra a necessidade da peça.
+2. O atendente verifica a disponibilidade da peça.
+3. Caso a peça esteja disponível, o serviço pode prosseguir.
+4. Caso a peça não esteja disponível, o atendente registra a necessidade de encomenda.
+5. O atendente registra o prazo estimado para obtenção da peça.
+6. O atendimento permanece pendente enquanto a peça não estiver disponível.
+7. Quando a peça estiver disponível, o atendimento pode prosseguir.
+8. O serviço é realizado.
+
+### Fluxo alternativo — Prazo maior
+
+1. A peça precisa ser encomendada.
+2. O prazo inicialmente informado pode ser alterado.
+3. O cliente é informado sobre a necessidade de aguardar a peça e sobre o novo prazo.
+4. O atendimento permanece pendente até a disponibilidade da peça.
