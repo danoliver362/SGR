@@ -21,3 +21,28 @@ O sistema deve permitir registrar marca, modelo e características do relógio p
 
 RF-008 — Características visuais
 O sistema deve permitir registrar informações como tipo de relógio, material e cor da pulseira e características do mostrador.
+
+RF-009 — Registro do serviço
+O sistema deve permitir registrar o serviço solicitado para cada relógio.
+Exemplo:
+Troca de bateria
+Troca de vidro
+Ajuste de pulseira
+Revisão
+Conserto do mecanismo
+
+RF-010 — Observações do serviço
+O sistema deve permitir registrar observações adicionais sobre o serviço ou sobre o estado do relógio.
+
+RF-011 — Status do serviço
+O sistema deve permitir acompanhar o status atual de cada serviço.
+
+RF-012 — Localização física
+O sistema deve permitir registrar a localização física atual do relógio na loja.
+
+Exemplo:
+
+📍 Bancada
+📍 Cabine
+📍 Caixa de pendentes
+📍 Gancho de prontos
