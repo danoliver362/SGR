@@ -33,10 +33,35 @@ O sistema deve permitir acompanhar o status atual de cada serviço.
 
 RF-012 — Localização física
 O sistema deve permitir registrar a localização física atual do relógio na loja.
-
 Exemplo:
-
 📍 Bancada
 📍 Cabine
 📍 Caixa de pendentes
 📍 Gancho de prontos
+
+RF-013 — Avaliação do serviço
+O sistema deve permitir registrar o resultado da avaliação realizada no relógio.
+
+RF-014 — Orçamento
+O sistema deve permitir registrar quando um serviço necessita de orçamento e o valor estimado, quando disponível.
+
+RF-015 — Aprovação do orçamento
+O sistema deve permitir registrar a aprovação ou recusa do orçamento pelo cliente.
+
+RF-016 — Necessidade de peça
+O sistema deve permitir registrar quando a realização do serviço depende de uma peça.
+
+RF-017 — Acompanhamento de pendências
+O sistema deve permitir identificar serviços que estejam aguardando uma ação ou informação para continuar o atendimento.
+
+Porque o seu exemplo acabou de mostrar que existem várias pendências:
+
+🟡 aguardando orçamento;
+🟡 aguardando aprovação do cliente;
+🟡 aguardando peça;
+🟡 aguardando resposta do cliente;
+🟡 talvez outras que ainda vamos descobrir.
+
+
+RF-018 — Prazo
+O sistema deve permitir registrar e acompanhar o prazo estimado para conclusão do serviço.
