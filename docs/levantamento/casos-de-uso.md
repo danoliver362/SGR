@@ -116,3 +116,48 @@ Atendente
 ### Resultado
 
 O novo prazo fica registrado no atendimento e o cliente é informado sobre a alteração.
+
+## UC-005 — Serviço concluído e aguardando retirada
+
+### Objetivo
+
+Registrar a conclusão do serviço e acompanhar o relógio até sua retirada pelo cliente.
+
+### Ator principal
+
+Atendente
+
+### Pré-condições
+
+- O serviço foi concluído.
+- O relógio está disponível para retirada.
+
+### Fluxo principal
+
+1. O atendente registra a conclusão do serviço.
+2. O atendente identifica o telefone do cliente na etiqueta do relógio.
+3. O atendente entra em contato com o cliente para informar que o relógio está pronto.
+4. O relógio é colocado no gancho de prontos para retirada.
+5. O atendimento permanece aguardando a retirada do cliente.
+6. O cliente comparece à loja para retirar o relógio.
+7. O atendente localiza o atendimento no sistema.
+8. O atendente registra a retirada do relógio.
+9. O atendente registra a data de retirada.
+10. O atendente registra a garantia aplicável ao serviço, quando houver.
+
+### Fluxo alternativo — Cliente sem o cartão
+
+1. O cliente comparece à loja sem o cartão.
+2. O atendente localiza o atendimento utilizando as informações disponíveis.
+3. O cliente é orientado a trazer o cartão posteriormente para que a baixa seja realizada.
+
+### Fluxo alternativo — Cartão perdido
+
+1. O cliente informa que perdeu o cartão.
+2. O atendente registra a retirada em um caderno utilizado pela loja.
+3. São registrados o modelo do relógio, o serviço realizado e a assinatura do cliente.
+4. A retirada é considerada registrada conforme o procedimento adotado pela loja.
+
+### Resultado
+
+A retirada do relógio fica registrada, juntamente com a data e as informações de garantia, quando aplicável.
