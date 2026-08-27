@@ -77,3 +77,6 @@ O sistema deve permitir registrar o período de garantia aplicável ao serviço 
 
 RF-025 — Retorno em garantia
 O sistema deve permitir registrar o retorno de um relógio relacionado a um serviço realizado anteriormente e consultar seu histórico de garantia.
+
+RF-026 — Identificação do atendimento
+O sistema deve gerar uma numeração única para cada atendimento, permitindo sua identificação e consulta no sistema. Essa numeração poderá ser registrada no cartão físico entregue ao cliente e utilizada para localizar o atendimento e todos os relógios associados a ele.
