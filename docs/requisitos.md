@@ -65,3 +65,40 @@ Porque o seu exemplo acabou de mostrar que existem várias pendências:
 
 RF-018 — Prazo
 O sistema deve permitir registrar e acompanhar o prazo estimado para conclusão do serviço.
+
+RF-019 — Conclusão do serviço
+O sistema deve permitir registrar que o serviço de um relógio foi concluído.
+
+Isso é diferente de simplesmente mudar o status. Queremos que fique registrado que o trabalho realmente terminou.
+
+RF-020 — Aviso ao cliente
+O sistema deve permitir registrar que o cliente foi informado sobre a conclusão do serviço.
+
+RF-021 — Aguardando retirada
+O sistema deve identificar os relógios cujo serviço foi concluído e que estão aguardando retirada pelo cliente.
+Isso conversa diretamente com o gancho que você me mostrou:
+PRONTOS P/ RETIRADA
+
+RF-022 — Registro da retirada
+O sistema deve permitir registrar a data em que o relógio foi retirado pelo cliente.
+Isso substitui uma das informações que hoje vocês escrevem manualmente no cartão.
+
+RF-023 — Retirada parcial
+O sistema deve permitir registrar a retirada de um ou mais relógios de um atendimento sem encerrar os demais relógios que ainda permanecem pendentes.
+Exemplo:
+
+João — 15 relógios
+
+✅ 10 retirados
+🛠️ 3 em conserto
+⏳ 2 aguardando peça
+
+O atendimento continua aberto até todos serem resolvidos.
+
+RF-024 — Registro de garantia
+O sistema deve permitir registrar o período de garantia aplicável ao serviço realizado.
+No caso de vocês:
+3 meses ou 6 meses.
+
+RF-025 — Retorno em garantia
+O sistema deve permitir registrar o retorno de um relógio relacionado a um serviço realizado anteriormente e consultar seu histórico de garantia.
