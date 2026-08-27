@@ -41,8 +41,6 @@ O serviço não pode ser realizado sem definição prévia do orçamento.
 
 ### Fluxo principal
 
-### Fluxo principal
-
 1. O atendente registra o resultado da avaliação.
 2. O atendente identifica a necessidade de orçamento.
 3. O atendente verifica a peça necessária e seu valor, quando aplicável.
