@@ -192,3 +192,42 @@ Atendente
 ### Resultado
 
 Os relógios retirados ficam registrados como retirados, enquanto os demais continuam sendo acompanhados no mesmo atendimento.
+
+## UC-007 — Retorno em garantia
+
+### Objetivo
+
+Registrar o retorno de um relógio relacionado a um serviço realizado anteriormente e verificar as informações de garantia e do serviço original.
+
+### Ator principal
+
+Atendente
+
+### Pré-condições
+
+- O relógio possui um serviço realizado anteriormente.
+- O cliente informa que o relógio apresentou um problema após o serviço.
+- O serviço anterior possui garantia, quando aplicável.
+
+### Fluxo principal
+
+1. O cliente retorna à loja com o relógio.
+2. O atendente localiza o cliente e o histórico do relógio no sistema.
+3. O atendente consulta o serviço realizado anteriormente.
+4. O atendente verifica a garantia relacionada ao serviço.
+5. O relógio é encaminhado para avaliação do responsável pelo conserto.
+6. O responsável avalia o relógio e verifica se o problema está relacionado ao serviço realizado anteriormente.
+7. O resultado da avaliação é registrado no sistema.
+8. Caso o retorno esteja relacionado à garantia, o novo atendimento é associado ao serviço anterior.
+9. O relógio segue o fluxo de conserto correspondente.
+
+### Fluxo alternativo — Problema não relacionado à garantia
+
+1. O responsável avalia o relógio.
+2. É identificado que o problema não está relacionado ao serviço anterior ou que a garantia não é aplicável.
+3. O cliente é informado sobre a situação.
+4. Caso seja necessário realizar um novo serviço, é iniciado um novo atendimento conforme o procedimento adequado.
+
+### Resultado
+
+O retorno fica registrado no histórico do relógio e relacionado ao serviço anterior, mantendo as informações da avaliação e da garantia.
