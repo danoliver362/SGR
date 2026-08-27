@@ -49,6 +49,7 @@ O serviço não pode ser realizado sem definição prévia do orçamento.
 6. O cliente recebe as informações sobre o serviço e o valor.
 7. O atendente registra a aprovação ou recusa do orçamento.
 8. Em caso de aprovação, o serviço pode prosseguir.
+9. Em caso de recusa, o atendimento é encaminhado para encerramento e devolução do relógio ao cliente.
    
 ### Fluxo alternativo — Valor ainda não disponível
 
@@ -203,11 +204,11 @@ Registrar o retorno de um relógio relacionado a um serviço realizado anteriorm
 
 Atendente
 
+
 ### Pré-condições
 
 - O relógio possui um serviço realizado anteriormente.
 - O cliente informa que o relógio apresentou um problema após o serviço.
-- O serviço anterior possui garantia, quando aplicável.
 
 ### Fluxo principal
 
