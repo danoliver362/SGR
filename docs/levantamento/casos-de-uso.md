@@ -89,3 +89,30 @@ Atendente
 2. O prazo inicialmente informado pode ser alterado.
 3. O cliente é informado sobre a necessidade de aguardar a peça e sobre o novo prazo.
 4. O atendimento permanece pendente até a disponibilidade da peça.
+
+## UC-004 — Alteração de prazo
+
+### Objetivo
+
+Registrar e acompanhar a alteração do prazo estimado para conclusão de um serviço.
+
+### Ator principal
+
+Atendente
+
+### Pré-condições
+
+- O serviço está em andamento.
+- Existe um prazo estimado para sua conclusão.
+
+### Fluxo principal
+
+1. O atendente identifica que o prazo inicialmente estimado não poderá ser cumprido.
+2. O atendente registra o novo prazo estimado.
+3. O atendente registra o motivo da alteração, quando necessário.
+4. O cliente é informado sobre a alteração do prazo.
+5. O serviço permanece em acompanhamento até sua conclusão.
+
+### Resultado
+
+O novo prazo fica registrado no atendimento e o cliente é informado sobre a alteração.
