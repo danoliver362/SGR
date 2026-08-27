@@ -161,3 +161,34 @@ Atendente
 ### Resultado
 
 A retirada do relógio fica registrada, juntamente com a data e as informações de garantia, quando aplicável.
+
+## UC-006 — Retirada parcial
+
+### Objetivo
+
+Registrar a retirada de um ou mais relógios de um atendimento que ainda possui outros relógios pendentes.
+
+### Ator principal
+
+Atendente
+
+### Pré-condições
+
+- O atendimento possui dois ou mais relógios.
+- Pelo menos um dos relógios está pronto para retirada.
+- Existem outros relógios que ainda permanecem pendentes ou em andamento.
+
+### Fluxo principal
+
+1. O cliente comparece à loja para retirar um ou mais relógios.
+2. O atendente localiza o atendimento no sistema.
+3. O sistema apresenta os relógios associados ao atendimento e seus respectivos status.
+4. O atendente identifica quais relógios serão retirados.
+5. O atendente registra a retirada dos relógios selecionados.
+6. O atendente registra a data de retirada.
+7. O sistema mantém os demais relógios no atendimento com seus respectivos status.
+8. O atendimento permanece aberto enquanto existirem relógios pendentes.
+
+### Resultado
+
+Os relógios retirados ficam registrados como retirados, enquanto os demais continuam sendo acompanhados no mesmo atendimento.
