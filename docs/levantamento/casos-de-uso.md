@@ -25,3 +25,35 @@ Atendente
 
 ### Resultado
 O atendimento fica registrado no histórico do cliente como concluído.
+
+## UC-002 — Serviço com orçamento
+
+###Objetivo
+Registrar e acompanhar um serviço que necessita de orçamento antes de sua realização.
+
+###Ator principal
+Atendente
+
+###Pré-condições
+
+O cliente deixou o relógio para avaliação.
+O serviço não pode ser realizado sem definição prévia do orçamento.
+
+###Fluxo principal
+
+O atendente registra o resultado da avaliação.
+O atendente identifica a necessidade de orçamento.
+O atendente verifica a peça necessária e seu valor, quando aplicável.
+O atendente registra o valor do orçamento quando as informações estiverem disponíveis.
+O atendente entra em contato com o cliente.
+O cliente recebe as informações sobre o serviço e o valor.
+O atendente registra a aprovação ou recusa do orçamento.
+Em caso de aprovação, o serviço pode prosseguir.
+E temos uma exceção
+
+###Fluxo alternativo — Valor ainda não disponível
+
+O cliente entra em contato antes da definição do orçamento.
+O atendente informa que o valor ainda está sendo verificado.
+O atendimento permanece pendente.
+Quando o valor estiver disponível, o cliente é contatado novamente.
