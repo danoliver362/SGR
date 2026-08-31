@@ -1,0 +1,95 @@
+# Modelagem do Sistema — SGR
+
+## 1. Entidades
+
+### 1.1 Cliente
+
+Representa o cliente da relojoaria.
+
+Atributos:
+- ID
+- Nome
+- Telefone
+
+Um cliente pode possuir vários atendimentos.
+
+---
+
+### 1.2 Atendimento
+
+Representa cada atendimento realizado ao cliente.
+
+Atributos:
+- ID
+- Número do atendimento
+- Data
+
+Um atendimento pertence a um cliente e pode envolver um ou mais relógios e serviços.
+
+---
+
+### 1.3 Relógio
+
+Representa o relógio cadastrado no sistema.
+
+Atributos:
+- ID
+- Marca
+- Modelo
+- Tipo
+- Material da pulseira
+- Cor da pulseira
+- Características do mostrador
+
+Um relógio pode possuir vários serviços realizados ao longo do tempo.
+
+---
+
+### 1.4 Serviço
+
+Representa um serviço realizado em um relógio.
+
+Atributos:
+- ID
+- Descrição
+- Data
+- Status
+- Prazo
+- Valor
+- Garantia
+
+Um serviço pertence a um atendimento e está relacionado a um relógio.
+
+---
+
+## 2. Relacionamentos
+
+### Cliente → Atendimento
+
+Um cliente pode possuir vários atendimentos.
+
+**Cardinalidade: 1:N**
+
+---
+
+### Atendimento → Relógio
+
+Um atendimento pode envolver um ou mais relógios.
+
+**Cardinalidade: 1:N**
+
+---
+
+### Relógio → Serviço
+
+Um relógio pode possuir vários serviços realizados ao longo do tempo.
+
+**Cardinalidade: 1:N**
+
+---
+
+### Atendimento → Serviço
+
+Um atendimento pode possuir um ou mais serviços.
+
+**Cardinalidade: 1:N**
