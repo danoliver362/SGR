@@ -11,7 +11,7 @@ Atributos:
 - Nome
 - Telefone
 
-Um cliente pode possuir vários atendimentos.
+Um cliente pode possuir nenhum ou vários atendimentos.
 
 ---
 
@@ -23,12 +23,33 @@ Atributos:
 - ID
 - Número do atendimento
 - Data
+- Status
 
-Um atendimento pertence a um cliente e pode envolver um ou mais relógios e serviços.
+Um atendimento pertence a um cliente e pode envolver um ou mais relógios.
+
+O atendimento permanece aberto enquanto houver itens ou serviços pendentes e é encerrado quando não houver mais pendências relacionadas ao atendimento.
 
 ---
 
-### 1.3 Relógio
+### 1.3 Item_Atendimento
+
+Representa a participação de um relógio específico em um atendimento.
+
+Atributos:
+- ID
+- Estado de conservação
+- Localização física
+- Data de retirada
+
+Um atendimento pode possuir um ou mais itens de atendimento.
+
+Um item de atendimento está associado a um único relógio e pode possuir nenhum ou vários serviços.
+
+Um item de atendimento pode possuir nenhum ou um orçamento.
+
+---
+
+### 1.4 Relógio
 
 Representa o relógio cadastrado no sistema.
 
@@ -41,24 +62,77 @@ Atributos:
 - Cor da pulseira
 - Características do mostrador
 
-Um relógio pode possuir vários serviços realizados ao longo do tempo.
+Um relógio pode participar de vários atendimentos ao longo do tempo por meio dos itens de atendimento.
 
 ---
 
-### 1.4 Serviço
+### 1.5 Serviço
 
-Representa um serviço realizado em um relógio.
+Representa um serviço solicitado, executado ou acompanhado para um relógio dentro de um atendimento.
 
 Atributos:
 - ID
 - Descrição
-- Data
+- Data de início
+- Data prevista de conclusão
+- Data de conclusão
 - Status
-- Prazo
 - Valor
-- Garantia
+- Possui garantia
+- Início da garantia
+- Fim da garantia
 
-Um serviço pertence a um atendimento e está relacionado a um relógio.
+Um serviço pertence a um item de atendimento.
+
+Um serviço pode ser criado diretamente ou ser originado de um item de orçamento aprovado.
+
+---
+
+### 1.6 Orçamento
+
+Representa uma proposta de serviços apresentada ao cliente para um relógio dentro de um atendimento.
+
+Atributos:
+- ID
+- Data
+
+Um item de atendimento pode possuir nenhum ou um orçamento.
+
+O orçamento é composto por um ou mais itens de orçamento.
+
+O estado geral do orçamento pode ser identificado a partir dos status de seus itens de orçamento.
+
+---
+
+### 1.7 Item_Orçamento
+
+Representa cada serviço ou procedimento proposto dentro de um orçamento.
+
+Atributos:
+- ID
+- Descrição
+- Valor
+- Status
+
+Um orçamento possui um ou mais itens de orçamento.
+
+Um item de orçamento pode gerar nenhum ou um serviço, dependendo da decisão do cliente.
+
+---
+
+### 1.8 Pagamento
+
+Representa um pagamento realizado referente a um atendimento.
+
+Atributos:
+- ID
+- Valor
+- Forma de pagamento
+- Data
+
+Um atendimento pode possuir nenhum ou vários pagamentos.
+
+Um atendimento pode possuir mais de um pagamento, inclusive utilizando diferentes formas de pagamento.
 
 ---
 
@@ -66,30 +140,78 @@ Um serviço pertence a um atendimento e está relacionado a um relógio.
 
 ### Cliente → Atendimento
 
-Um cliente pode possuir vários atendimentos.
+Um cliente pode possuir nenhum ou vários atendimentos.
 
-**Cardinalidade: 1:N**
+Cada atendimento pertence a um único cliente.
 
----
-
-### Atendimento → Relógio
-
-Um atendimento pode envolver um ou mais relógios.
-
-**Cardinalidade: 1:N**
+**Cardinalidade: 1 : 0..N**
 
 ---
 
-### Relógio → Serviço
+### Atendimento → Item_Atendimento
 
-Um relógio pode possuir vários serviços realizados ao longo do tempo.
+Um atendimento deve possuir um ou mais itens de atendimento.
 
-**Cardinalidade: 1:N**
+Cada item de atendimento pertence a um único atendimento.
+
+**Cardinalidade: 1 : N**
 
 ---
 
-### Atendimento → Serviço
+### Item_Atendimento → Relógio
 
-Um atendimento pode possuir um ou mais serviços.
+Um item de atendimento está associado a um único relógio.
 
-**Cardinalidade: 1:N**
+Um relógio pode participar de vários atendimentos ao longo do tempo por meio de diferentes itens de atendimento.
+
+**Cardinalidade: N : 1**
+
+---
+
+### Item_Atendimento → Serviço
+
+Um item de atendimento pode possuir nenhum ou vários serviços.
+
+Cada serviço pertence a um único item de atendimento.
+
+**Cardinalidade: 1 : 0..N**
+
+---
+
+### Atendimento → Pagamento
+
+Um atendimento pode possuir nenhum ou vários pagamentos.
+
+Cada pagamento pertence a um único atendimento.
+
+**Cardinalidade: 1 : 0..N**
+
+---
+
+### Item_Atendimento → Orçamento
+
+Um item de atendimento pode possuir nenhum ou um orçamento.
+
+Cada orçamento está associado a um único item de atendimento.
+
+**Cardinalidade: 1 : 0..1**
+
+---
+
+### Orçamento → Item_Orçamento
+
+Um orçamento possui um ou mais itens de orçamento.
+
+Cada item de orçamento pertence a um único orçamento.
+
+**Cardinalidade: 1 : N**
+
+---
+
+### Item_Orçamento → Serviço
+
+Um item de orçamento pode gerar nenhum ou um serviço.
+
+Um serviço pode ser originado de nenhum ou um item de orçamento, pois serviços diretos não precisam passar por orçamento.
+
+**Cardinalidade: 0..1 : 0..1**
