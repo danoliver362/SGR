@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SGR — Relojoaria</title>
+<style>
+  :root {
+    --bg: #f5f3ee; --card: #ffffff; --ink: #1f2328; --muted: #6b7280;
+    --line: #e2ded4; --accent: #7a5c2e; --accent-ink: #ffffff;
+    --recebido: #6b7280; --em_conserto: #b45309; --pronto: #15803d; --retirado: #9ca3af;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #17140f; --card: #211d16; --ink: #ece7dc; --muted: #9a9384;
+            --line: #3a3427; --accent: #c9a25e; --accent-ink: #17140f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { position: sticky; top: 0; z-index: 5; background: var(--card);
+           border-bottom: 1px solid var(--line); padding: 10px 16px;
+           display: flex; align-items: center; gap: 12px; }
+  header h1 { font-size: 18px; margin: 0; flex: 1; }
+  nav { display: flex; gap: 6px; padding: 10px 16px 0; max-width: 720px; margin: 0 auto; }
+  nav button { flex: 1; }
+  main { max-width: 720px; margin: 0 auto; padding: 12px 16px 48px; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { min-height: 44px; padding: 0 14px; border-radius: 10px; cursor: pointer;
+           border: 1px solid var(--line); background: var(--card); }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  button.tab.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  button.link { min-height: 0; border: 0; background: none; color: var(--muted); padding: 6px; }
+  input, select, textarea { width: 100%; min-height: 44px; padding: 8px 10px; border-radius: 10px;
+           border: 1px solid var(--line); background: var(--card); }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+          padding: 14px; margin: 12px 0; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row > * { flex: 1; }
+  .title { font-weight: 600; font-size: 17px; }
+  .muted { color: var(--muted); font-size: 14px; }
+  .item { border-top: 1px solid var(--line); padding-top: 10px; margin-top: 10px; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px;
+           color: #fff; background: var(--recebido); }
+  .badge.em_conserto { background: var(--em_conserto); }
+  .badge.pronto { background: var(--pronto); }
+  .badge.retirado { background: var(--retirado); }
+  .msg { padding: 10px 12px; border-radius: 10px; margin: 12px 0; background: var(--card);
+         border: 1px solid var(--line); }
+  .msg.err { border-color: #b91c1c; color: #b91c1c; }
+  .msg.ok { border-color: var(--pronto); color: var(--pronto); }
+  .hidden { display: none !important; }
+  .empty { text-align: center; color: var(--muted); padding: 28px 0; }
+</style>
+</head>
+<body>
+
+<!-- ====== CONFIGURAÇÃO: troque pelos dados do seu projeto Supabase ====== -->
+<script>
+  const SUPABASE_URL = "https://uqtpfzvqepdvxkjetago.supabase.co";      // ex.: https://abcdxyz.supabase.co
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxdHBmenZxZXBkdnhramV0YWdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM3NDQ3MzQsImV4cCI6MjEwOTMyMDczNH0.cePcZbYmIA4LaW5JnoH28x-RfKOZkvWb25NNHB_9Fuk";     // chave "anon public"
+</script>
+
+<header>
+  <h1>SGR · Relojoaria</h1>
+  <button id="btn-sair" class="link hidden">Sair</button>
+</header>
+
+<!-- Login -->
+<main id="tela-login" class="hidden">
+  <div class="card">
+    <div class="title">Entrar</div>
+    <label for="login-email">E-mail</label>
+    <input id="login-email" type="email" autocomplete="username">
+    <label for="login-senha">Senha</label>
+    <input id="login-senha" type="password" autocomplete="current-password">
+    <div style="margin-top:14px"><button id="btn-entrar" class="primary" style="width:100%">Entrar</button></div>
+    <div id="login-msg"></div>
+  </div>
+</main>
+
+<!-- App -->
+<div id="tela-app" class="hidden">
+  <nav>
+    <button class="tab active" data-tab="buscar">Buscar</button>
+    <button class="tab" data-tab="loja">Na loja</button>
+    <button class="tab" data-tab="novo">Novo</button>
+  </nav>
+
+  <main>
+    <div id="msg-global"></div>
+
+    <!-- Buscar -->
+    <section id="tab-buscar">
+      <label for="busca-q">Número do cartão, nome ou telefone</label>
+      <div class="row">
+        <input id="busca-q" type="search" inputmode="search" placeholder="ex.: 186, Maria, 9999-1234">
+        <button id="btn-buscar" class="primary" style="flex:0 0 auto">Buscar</button>
+      </div>
+      <div id="busca-res"></div>
+    </section>
+
+    <!-- Na loja -->
+    <section id="tab-loja" class="hidden">
+      <label for="loja-filtro">Mostrar</label>
+      <select id="loja-filtro">
+        <option value="todos">Tudo que ainda não foi retirado</option>
+        <option value="recebido">Recebido</option>
+        <option value="em_conserto">Em conserto</option>
+        <option value="pronto">Pronto (aguardando retirada)</option>
+      </select>
+      <div id="loja-res"></div>
+    </section>
+
+    <!-- Novo -->
+    <section id="tab-novo" class="hidden">
+      <div class="card">
+        <div class="title">Novo atendimento</div>
+        <div class="muted">O número do atendimento é gerado automaticamente ao salvar.</div>
+        <label for="n-nome">Nome do cliente</label>
+        <input id="n-nome" type="text" autocomplete="off">
+        <label for="n-tel">Telefone</label>
+        <input id="n-tel" type="tel" inputmode="tel" autocomplete="off">
+        <label for="n-obs">Observações (opcional)</label>
+        <textarea id="n-obs" rows="2"></textarea>
+      </div>
+      <div id="n-itens"></div>
+      <div class="row">
+        <button id="btn-add-item">+ Outro relógio</button>
+        <button id="btn-salvar" class="primary">Salvar atendimento</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var STATUS = { recebido: "Recebido", em_conserto: "Em conserto", pronto: "Pronto", retirado: "Retirado" };
+  var LOCAIS = { bancada: "Bancada", cabine: "Cabine", caixa_pendentes: "Caixa de pendentes", gancho_prontos: "Gancho de prontos" };
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // Cria elemento sem usar innerHTML (evita injeção de HTML vindo dos dados)
+  function el(tag, props, children) {
+    var e = document.createElement(tag);
+    props = props || {};
+    Object.keys(props).forEach(function (k) {
+      if (k === "class") e.className = props[k];
+      else if (k === "text") e.textContent = props[k];
+      else if (k.slice(0, 2) === "on") e.addEventListener(k.slice(2), props[k]);
+      else e.setAttribute(k, props[k]);
+    });
+    (children || []).forEach(function (c) { if (c) e.appendChild(c); });
+    return e;
+  }
+
+  function fmtData(iso) {
+    if (!iso) return "";
+    var p = iso.split("-");
+    return p[2] + "/" + p[1] + "/" + p[0];
+  }
+  function hoje() {
+    var d = new Date();
+    var m = String(d.getMonth() + 1).padStart(2, "0");
+    var dia = String(d.getDate()).padStart(2, "0");
+    return d.getFullYear() + "-" + m + "-" + dia;
+  }
+
+  function mostrarMsg(destino, texto, tipo) {
+    destino.replaceChildren(el("div", { class: "msg " + (tipo || ""), text: texto }));
+  }
+  function limparMsg(destino) { destino.replaceChildren(); }
+
+  // ---- Configuração ----
+  if (SUPABASE_URL.indexOf("COLE_AQUI") === 0 || SUPABASE_ANON_KEY.indexOf("COLE_AQUI") === 0) {
+    $("tela-login").classList.remove("hidden");
+    mostrarMsg($("login-msg"), "Falta configurar: edite o topo do arquivo index.html com a URL e a chave do Supabase.", "err");
+    $("btn-entrar").disabled = true;
+    return;
+  }
+  var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ---- Login ----
+  function mostrarLogin() {
+    $("tela-app").classList.add("hidden");
+    $("btn-sair").classList.add("hidden");
+    $("tela-login").classList.remove("hidden");
+  }
+  function mostrarApp() {
+    $("tela-login").classList.add("hidden");
+    $("tela-app").classList.remove("hidden");
+    $("btn-sair").classList.remove("hidden");
+  }
+
+  $("btn-entrar").addEventListener("click", entrar);
+  $("login-senha").addEventListener("keydown", function (e) { if (e.key === "Enter") entrar(); });
+  function entrar() {
+    limparMsg($("login-msg"));
+    db.auth.signInWithPassword({ email: $("login-email").value.trim(), password: $("login-senha").value })
+      .then(function (r) {
+        if (r.error) {
+          var m = r.error.message || "";
+          var texto = /invalid login credentials/i.test(m) ? "E-mail ou senha incorretos (ou o usuário não existe neste projeto)."
+                    : /not confirmed/i.test(m) ? "E-mail ainda não confirmado. No Supabase, abra Authentication > Users, clique no usuário e confirme, ou recrie marcando Auto Confirm User."
+                    : /api key/i.test(m) ? "Chave do Supabase inválida: confira a chave anon no topo do index.html."
+                    : "Erro: " + m;
+          mostrarMsg($("login-msg"), texto, "err"); return;
+        }
+        $("login-senha").value = "";
+        mostrarApp();
+        $("busca-q").focus();
+      });
+  }
+  $("btn-sair").addEventListener("click", function () { db.auth.signOut().then(mostrarLogin); });
+
+  db.auth.getSession().then(function (r) {
+    if (r.data && r.data.session) mostrarApp(); else mostrarLogin();
+  });
+
+  // ---- Abas ----
+  var abas = ["buscar", "loja", "novo"];
+  document.querySelectorAll("button.tab").forEach(function (b) {
+    b.addEventListener("click", function () { abrirAba(b.getAttribute("data-tab")); });
+  });
+  function abrirAba(nome) {
+    abas.forEach(function (a) {
+      $("tab-" + a).classList.toggle("hidden", a !== nome);
+    });
+    document.querySelectorAll("button.tab").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-tab") === nome);
+    });
+    limparMsg($("msg-global"));
+    if (nome === "loja") carregarLoja();
+    if (nome === "novo" && $("n-itens").children.length === 0) adicionarItem();
+  }
+
+  // ---- Componentes de item (status/localização editáveis) ----
+  function selectDe(opcoes, valor, vazioTexto) {
+    var s = el("select");
+    if (vazioTexto) s.appendChild(el("option", { value: "", text: vazioTexto }));
+    Object.keys(opcoes).forEach(function (k) {
+      var o = el("option", { value: k, text: opcoes[k] });
+      if (k === valor) o.selected = true;
+      s.appendChild(o);
+    });
+    return s;
+  }
+
+  function blocoItem(item) {
+    var badge = el("span", { class: "badge " + item.status, text: STATUS[item.status] });
+    var selStatus = selectDe(STATUS, item.status);
+    var selLocal = selectDe(LOCAIS, item.localizacao, "— sem local —");
+    var aviso = el("div");
+
+    function salvar() {
+      var novoStatus = selStatus.value;
+      var patch = {
+        status: novoStatus,
+        localizacao: selLocal.value || null,
+        data_retirada: novoStatus === "retirado" ? (item.data_retirada || hoje()) : null
+      };
+      db.from("itens_atendimento").update(patch).eq("id", item.id).then(function (r) {
+        if (r.error) { mostrarMsg(aviso, "Não salvou: " + r.error.message, "err"); return; }
+        item.status = novoStatus;
+        item.localizacao = patch.localizacao;
+        item.data_retirada = patch.data_retirada;
+        badge.className = "badge " + novoStatus;
+        badge.textContent = STATUS[novoStatus];
+        mostrarMsg(aviso, "Salvo.", "ok");
+        setTimeout(function () { limparMsg(aviso); }, 1500);
+      });
+    }
+    selStatus.addEventListener("change", salvar);
+    selLocal.addEventListener("change", salvar);
+
+    var info = [badge];
+    if (item.data_retirada) info.push(el("span", { class: "muted", text: "  retirado em " + fmtData(item.data_retirada) }));
+
+    return el("div", { class: "item" }, [
+      el("div", { class: "title", text: item.descricao }),
+      el("div", { class: "muted", text: "Serviço: " + item.servico }),
+      el("div", { style: "margin:6px 0" }, info),
+      el("div", { class: "row" }, [
+        el("div", {}, [el("label", { text: "Status" }), selStatus]),
+        el("div", {}, [el("label", { text: "Onde está" }), selLocal])
+      ]),
+      aviso
+    ]);
+  }
+
+  function cartaoAtendimento(a, itens) {
+    return el("div", { class: "card" }, [
+      el("div", { class: "title", text: "#" + String(a.numero).padStart(6, "0") + " · " + a.cliente_nome }),
+      el("div", { class: "muted", text: (a.cliente_telefone || "sem telefone") + " · entrada " + fmtData(a.data_entrada) }),
+      a.observacoes ? el("div", { class: "muted", text: "Obs.: " + a.observacoes }) : null
+    ].concat(itens.map(blocoItem)));
+  }
+
+  // ---- Buscar ----
+  $("btn-buscar").addEventListener("click", buscar);
+  $("busca-q").addEventListener("keydown", function (e) { if (e.key === "Enter") buscar(); });
+
+  function buscar() {
+    var q = $("busca-q").value.trim();
+    var destino = $("busca-res");
+    if (!q) { mostrarMsg(destino, "Digite um número, nome ou telefone."); return; }
+    // Remove caracteres que quebrariam o filtro do PostgREST
+    var seguro = q.replace(/[,()%*\\]/g, " ").trim();
+    var filtros = ["cliente_nome.ilike.%" + seguro + "%", "cliente_telefone.ilike.%" + seguro + "%"];
+    if (/^\d+$/.test(seguro)) filtros.push("numero.eq." + parseInt(seguro, 10));
+
+    destino.replaceChildren(el("div", { class: "empty", text: "Buscando…" }));
+    db.from("atendimentos")
+      .select("*, itens_atendimento(*)")
+      .or(filtros.join(","))
+      .order("data_entrada", { ascending: false })
+      .limit(30)
+      .then(function (r) {
+        if (r.error) { mostrarMsg(destino, "Erro na busca: " + r.error.message, "err"); return; }
+        if (!r.data.length) { destino.replaceChildren(el("div", { class: "empty", text: "Nada encontrado." })); return; }
+        destino.replaceChildren.apply(destino, r.data.map(function (a) {
+          return cartaoAtendimento(a, a.itens_atendimento || []);
+        }));
+      });
+  }
+
+  // ---- Na loja ----
+  $("loja-filtro").addEventListener("change", carregarLoja);
+  function carregarLoja() {
+    var destino = $("loja-res");
+    var filtro = $("loja-filtro").value;
+    destino.replaceChildren(el("div", { class: "empty", text: "Carregando…" }));
+    var q = db.from("itens_atendimento")
+      .select("*, atendimentos(numero, cliente_nome, cliente_telefone, data_entrada)")
+      .order("created_at", { ascending: true })
+      .limit(200);
+    q = filtro === "todos" ? q.neq("status", "retirado") : q.eq("status", filtro);
+    q.then(function (r) {
+      if (r.error) { mostrarMsg(destino, "Erro ao carregar: " + r.error.message, "err"); return; }
+      if (!r.data.length) { destino.replaceChildren(el("div", { class: "empty", text: "Nenhum relógio nesta lista." })); return; }
+      destino.replaceChildren.apply(destino, r.data.map(function (it) {
+        var a = it.atendimentos || {};
+        var topo = el("div", { class: "muted",
+          text: "#" + String(a.numero || 0).padStart(6, "0") + " · " + (a.cliente_nome || "") +
+                " · " + (a.cliente_telefone || "sem telefone") + " · entrada " + fmtData(a.data_entrada) });
+        var c = el("div", { class: "card" }, [topo, blocoItem(it)]);
+        c.querySelector(".item").style.borderTop = "0";
+        c.querySelector(".item").style.marginTop = "4px";
+        return c;
+      }));
+    });
+  }
+
+  // ---- Novo atendimento ----
+  function adicionarItem() {
+    var n = $("n-itens").children.length + 1;
+    var desc = el("input", { type: "text", autocomplete: "off", placeholder: "ex.: Casio prata, pulseira de aço, mostrador azul" });
+    var serv = el("input", { type: "text", autocomplete: "off", placeholder: "ex.: trocar bateria e pulseira" });
+    var loc = selectDe(LOCAIS, "bancada", "— sem local —");
+    var bloco = el("div", { class: "card" }, [
+      el("div", { class: "title", text: "Relógio " + n }),
+      el("label", { text: "Como reconhecer o relógio" }), desc,
+      el("label", { text: "Serviço pedido" }), serv,
+      el("label", { text: "Onde ficou" }), loc
+    ]);
+    bloco._campos = { desc: desc, serv: serv, loc: loc };
+    $("n-itens").appendChild(bloco);
+  }
+  $("btn-add-item").addEventListener("click", adicionarItem);
+
+  $("btn-salvar").addEventListener("click", function () {
+    var msg = $("msg-global");
+    var nome = $("n-nome").value.trim();
+    var itens = Array.prototype.map.call($("n-itens").children, function (b) {
+      return { descricao: b._campos.desc.value.trim(), servico: b._campos.serv.value.trim(),
+               localizacao: b._campos.loc.value || null };
+    });
+    if (!nome) { mostrarMsg(msg, "Informe o nome do cliente.", "err"); return; }
+    if (!itens.length || itens.some(function (i) { return !i.descricao || !i.servico; })) {
+      mostrarMsg(msg, "Cada relógio precisa de descrição e serviço.", "err"); return;
+    }
+    $("btn-salvar").disabled = true;
+
+    db.from("atendimentos").insert({
+      cliente_nome: nome,
+      cliente_telefone: $("n-tel").value.trim() || null,
+      observacoes: $("n-obs").value.trim() || null
+    }).select().single().then(function (r) {
+      if (r.error) {
+        $("btn-salvar").disabled = false;
+        mostrarMsg(msg, "Erro: " + r.error.message, "err");
+        return;
+      }
+      var linhas = itens.map(function (i) {
+        return { atendimento_id: r.data.id, descricao: i.descricao, servico: i.servico, localizacao: i.localizacao };
+      });
+      db.from("itens_atendimento").insert(linhas).then(function (r2) {
+        $("btn-salvar").disabled = false;
+        if (r2.error) {
+          // desfaz o atendimento para não ficar sem relógios
+          db.from("atendimentos").delete().eq("id", r.data.id).then(function () {
+            mostrarMsg(msg, "Erro ao salvar os relógios: " + r2.error.message, "err");
+          });
+          return;
+        }
+        ["n-nome", "n-tel", "n-obs"].forEach(function (id) { $(id).value = ""; });
+        $("n-itens").replaceChildren();
+        adicionarItem();
+        msg.replaceChildren(
+          el("div", { class: "msg ok" }, [
+            el("div", { text: "Atendimento salvo. Escreva este número no cartão:" }),
+            el("div", { style: "font-size:34px;font-weight:700;margin-top:4px",
+                        text: "#" + String(r.data.numero).padStart(6, "0") })
+          ])
+        );
+        window.scrollTo(0, 0);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
